@@ -44,3 +44,18 @@ shmdt(pint);
 //remove shared memory
 shmctl(shmid, IPC_RMID, NULL);
 }
+void child() {
+    sleep(5); int i;
+    // Create or get a shared memory segment
+    int shmid = shmget(SHMKEY, BUFF_SZ, 0777);
+    if (shmid == -1){
+    perror("Child: Error in shmget");
+    exit(1);
+    }
+    // Attach the shared memory segment
+    int *cint = (int *)(shmat(shmid, 0, 0));
+    for (i = 0; i < 10; i++){
+    sleep(1);
+    printf("Child: Read Val. = %d\n", *cint);
+    }
+    }
